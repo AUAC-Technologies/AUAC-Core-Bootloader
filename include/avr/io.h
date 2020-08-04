@@ -546,7 +546,7 @@
 
 #include <avr/common.h>
 
-#include <avr/version.h>
+#include <avr/version.h.in>
 
 #if __AVR_ARCH__ >= 100
 #  include <avr/xmega.h>
