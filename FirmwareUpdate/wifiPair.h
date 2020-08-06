@@ -17,7 +17,7 @@ class PAIR {
     public:
         uint8_t scanAccessPoints();
 
-        uint8_t getAPStrength(uint8_t AP);
+        int8_t getAPStrength(uint8_t AP);
 
         StringType getAP_Name(uint8_t Nnum);
 
@@ -26,6 +26,10 @@ class PAIR {
         uint8_t SCAN_FOR_UNSECURE_APs();
 
         StringType compileAccessibleNetworkInformation();
+
+        uint8_t determine_best_network_RSSI();
+
+        uint8_t CONNECT_TO_AP();
 
 
 };

@@ -7,7 +7,7 @@ uint8_t PAIR::scanAccessPoints(){
 }
 
 //Function gets AP Strength
-uint8_t PAIR::getAPStrength(uint8_t AP){
+int8_t PAIR::getAPStrength(uint8_t AP){
     //Get AP Strength
     return WiFi.RSSI(AP);
 }
@@ -61,4 +61,37 @@ StringType PAIR::compileAccessibleNetworkInformation(){
         }
     }
     return NetworkData;
+}
+
+uint8_t PAIR::determine_best_network_RSSI(){
+    //Get all free networks along with corresponding RSSI
+    StringType networks = compileAccessibleNetworkInformation();
+    //Determine network with highest RSSI and connect
+    uint8_t array_size;
+    //Array to hold RSSI values to determine best RSSI
+    int8_t *RSSI_ARRAY = (uint8_t*)malloc(array_size / 2);
+    uint8_t tempLoopCount;
+    for(size_t i = 0;i < array_size;i += 2){
+        RSSI_ARRAY[tempLoopCount] = atoi(networks[i]);
+        tempLoopCount++;
+    }
+    //Calculate best RSSI
+
+}
+
+//Connect to AP
+uint8_t PAIR::CONNECT_TO_AP(){
+    uint8_t MAX_TRIES;
+    while(MAX_TRIES != 10){
+        uint8_t bestNetworkNum = determine_best_network_RSSI();
+        char* bestNetworkSSID = getAP_Name(bestNetworkNum);
+        Wifi.mode(WIFI_STA);
+        WiFi.begin(bestNetworkSSID,NULL);
+        if(WiFi.status() != WL_CONNECTED){
+            MAX_TRIES++;
+        }else{
+            break;
+        }
+    }
+
 }
