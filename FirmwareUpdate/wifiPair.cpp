@@ -1,38 +1,31 @@
-#include "lib/ESP8266WiFi/src/ESP8266WiFi.h"
-#include<stdint.h>
-#include<stddef.h>
-#include<stdlib.h>
-
-#define NO_AP_ENCRYPTION 7
-
-typdef char* StringType;
+#include"wifiPair.h"
 
 //Function gets number of APs
-uint8_t scanAccessPoints(){
+uint8_t PAIR::scanAccessPoints(){
     //Return number of APs
     return WiFi.scanNetworks();
 }
 
 //Function gets AP Strength
-uint8_t getAPStrength(uint8_t AP){
+uint8_t PAIR::getAPStrength(uint8_t AP){
     //Get AP Strength
     return WiFi.RSSI(AP);
 }
 
 //Function gets AP_Name
-StringType getAP_Name(uint8_t Nnum){
+StringType PAIR::getAP_Name(uint8_t Nnum){
     //From the network number print the AP_Name
     return WiFi.SSID(Nnum);
 }
 
 // Function gets security type
-uint8_t getEncryptionType(uint8_t AP){
+uint8_t PAIR::getEncryptionType(uint8_t AP){
     //Get security type
     return WiFi.encryptionType(AP);
 }
 
 //Function scans for APs without encryption
-uint8_t SCAN_FOR_UNSECURE_APs(){
+uint8_t PAIR::SCAN_FOR_UNSECURE_APs(){
     uint8_t count;
     uint8_t iter = 0;
     while(iter != scanAccessPoints()){
@@ -45,12 +38,13 @@ uint8_t SCAN_FOR_UNSECURE_APs(){
     return count;
 }
 
-char tochar(uint8_t num){
+//Convert int to char
+char PAIR::tochar(uint8_t num){
     return num + '0';
 }
 
 //Function returns array of all free networks and their corresponding RSSI
-StringType compileAccessibleNetworkInformation(){
+StringType PAIR::compileAccessibleNetworkInformation(){
     //Array index count
     uint8_t indexCount;
     //Return Array
