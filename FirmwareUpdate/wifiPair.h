@@ -8,7 +8,6 @@
 
 #define NO_AP_ENCRYPTION 7
 
-typdef char* StringType;
 
 class PAIR {
     private:
@@ -19,13 +18,13 @@ class PAIR {
 
         int8_t getAPStrength(uint8_t AP);
 
-        StringType getAP_Name(uint8_t Nnum);
+        char* getAP_Name(uint8_t Nnum);
 
         uint8_t getEncryptionType(uint8_t AP);
 
         uint8_t SCAN_FOR_UNSECURE_APs();
 
-        StringType compileAccessibleNetworkInformation();
+        char* compileAccessibleNetworkInformation();
 
         uint8_t determine_best_network_RSSI();
 

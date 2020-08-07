@@ -13,7 +13,7 @@ int8_t PAIR::getAPStrength(uint8_t AP){
 }
 
 //Function gets AP_Name
-StringType PAIR::getAP_Name(uint8_t Nnum){
+char* PAIR::getAP_Name(uint8_t Nnum){
     //From the network number print the AP_Name
     return WiFi.SSID(Nnum);
 }
@@ -44,11 +44,11 @@ char PAIR::tochar(uint8_t num){
 }
 
 //Function returns array of all free networks and their corresponding RSSI
-StringType PAIR::compileAccessibleNetworkInformation(){
+char* PAIR::compileAccessibleNetworkInformation(){
     //Array index count
     uint8_t indexCount;
     //Return Array
-    char NetworkData[SCAN_FOR_UNSECURE_APs() * 2];
+    char *NetworkData = (char*)malloc(SCAN_FOR_UNSECURE_APs() * 2);
     //Iterate through all available networks
     for(size_t i = 0; i < scanAccessPoints();++i){
         //Determine if AP is encryption free
@@ -65,7 +65,7 @@ StringType PAIR::compileAccessibleNetworkInformation(){
 
 uint8_t PAIR::determine_best_network_RSSI(){
     //Get all free networks along with corresponding RSSI
-    StringType networks = compileAccessibleNetworkInformation();
+    char *networks = compileAccessibleNetworkInformation();
     //Determine network with highest RSSI and connect
     uint8_t array_size;
     //Array to hold RSSI values to determine best RSSI
@@ -75,9 +75,30 @@ uint8_t PAIR::determine_best_network_RSSI(){
         RSSI_ARRAY[tempLoopCount] = atoi(networks[i]);
         tempLoopCount++;
     }
-    //Calculate best RSSI
-
+    //Calculate best RSSI (threshold = -70dbm)
+    //Anything below -70dbm is not a sustaibale connection so largest RSSI will 
+    //be used
+    int8_t largestRSSI = RSSI_ARRAY[0];
+    for(size_t j = 0; j < tempLoopCount; ++j){
+        if(RSSI_ARRAY[j] > largestRSSI){
+            largestRSSI = RSSI_ARRAY[j];
+        }
+    }
+    if(largestRSSI < -70){
+        return 0;
+    }
+    //Backtrack to original network data array and get corresponding network number
+    uint8_t networkNumber;
+    for(size_t k = 0;k < array_size; k += 2){
+        if(atoi(networks[k]) == largestRSSI){
+            networkNumber = atoi(networks[k - 1]);
+        }
+    }
+    //Free memory
+    free(RSSI_ARRAY);
+    return networkNumber;
 }
+
 
 //Connect to AP
 uint8_t PAIR::CONNECT_TO_AP(){
