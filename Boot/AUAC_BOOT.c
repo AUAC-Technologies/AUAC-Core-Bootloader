@@ -6,8 +6,7 @@
 #include <inttypes.h>
 
 
- void boot_program_page (uint32_t page, uint8_t *buf)
-    {
+ void boot_program_page (uint32_t page, uint8_t *buf){
         uint16_t i;
         uint8_t sreg;
 
@@ -43,3 +42,9 @@
 
         SREG = sreg;
     }
+
+void begin(){
+    //start the actual program
+    asm("jmp 0");
+}
+
